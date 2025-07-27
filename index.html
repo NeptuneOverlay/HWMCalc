@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pressure Washing Quote Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f4f8fb;
+    }
+
+    img.logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 250px;
+      max-width: 90%;
+    }
+
+    button {
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f91;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/518407477_122136832370739327_604488447869802014_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=SCuk_TJ6UfoQ7kNvwF1vBtp&_nc_oc=Adn1-7xE8jdPVRlskcuP4TECv5jCfawMQDOR62LZOzD6Q2uK5ptnDMv18brx7Aq4iRA&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&_nc_gid=T4cYDEVqT9iWflDC51EvdA&oh=00_AfQnS4HKgOUJra3-mD8OtGFVQ-JsClOYxg_0el0-4vygBA&oe=688C7561" alt="Homewave Marketing Logo" class="logo">
+
+  <h2>Get Your Instant Quote</h2>
+
+  <input type="number" id="sqft" placeholder="House Square Footage (e.g. 2200)"><br>
+
+  <input type="number" id="cars" placeholder="Driveway Size (Number of Cars)"><br>
+
+  <button onclick="calculateQuote()">Calculate</button>
+
+  <div id="result"></div>
+
+  <script>
+    function getHousePrice(sqft) {
+      if (sqft <= 1500) return 200;
+      if (sqft <= 2000) return 235;
+      if (sqft <= 2500) return 245;
+      if (sqft <= 3000) return 275;
+      if (sqft <= 3300) return 300;
+      return null;
+    }
+
+    function getDrivewayPrice(cars, isBundle) {
+      return Math.ceil(cars / 2) * (isBundle ? 50 : 100);
+    }
+
+    function calculateQuote() {
+      const sqft = parseInt(document.getElementById('sqft').value);
+      const cars = parseInt(document.getElementById('cars').value);
+      let total = 0;
+      let breakdown = [];
+
+      const hasHouse = !isNaN(sqft);
+      const hasDriveway = !isNaN(cars);
+
+      if (!hasHouse && !hasDriveway) {
+        document.getElementById('result').innerText = "Please enter at least one field.";
+        return;
+      }
+
+      if (hasHouse) {
+        const housePrice = getHousePrice(sqft);
+        if (housePrice === null) {
+          document.getElementById('result').innerText = "We currently only support up to 3300 sq ft.";
+          return;
+        }
+        total += housePrice;
+        breakdown.push(`House Wash: $${housePrice}`);
+      }
+
+      if (hasDriveway) {
+        const drivewayPrice = getDrivewayPrice(cars, hasHouse);
+        total += drivewayPrice;
+        breakdown.push(`Driveway Cleaning: $${drivewayPrice}`);
+      }
+
+      document.getElementById('result').innerHTML = breakdown.join(" + ") + `<br><strong>Total: $${total}</strong>`;
+    }
+  </script>
+
+</body>
+</html>
